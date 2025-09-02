@@ -100,38 +100,41 @@ don't forget to download the private key, we will be needing that to login to th
 through SSH. 
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025205013.png)
+
 These are the network settings. Make sure to assign a public ip address for this instance.
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025205146.png)
 
 Make sure to add SSH security group, we will want to connect to it later.
 
->[!NOTE]
->**Security Groups Rules**: You can assign your public IP address to limit access to that instance 
+#### NOTE
+**Security Groups Rules**: You can assign your public IP address to limit access to that instance 
 for secure login. To do this, make sure to select _My IP_ from _Source type_.
 This ensures that only your home public IP address is allowed to connect to the instance.
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025205600.png)
 
->[!NOTE]
->Copy the public ip address of the created instance, we will be needing that later for the
+#### NOTE
+Copy the public ip address of the created instance, we will be needing that later for the
 *Customer Gateway* as well as to login to that instance. 
 
 Also, we will need to stop Source and Destination check from the instance.
+
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025212645.png)
 
->[!NOTE]
->Stopping this will allow the instance to route traffic. It can accept data from one network and 
+#### NOTE
+Stopping this will allow the instance to route traffic. It can accept data from one network and 
 send it to another, acting like a bridge between different networks. 
 Because that Instance will act as a VPN endpoint.
->
->---
->Adding more instances to that VPC, will just have to route its traffic to that VPN Endpoint.
->
->---
->*This instance do not originate or terminate traffic, 
+
+
+Adding more instances to that VPC, will just have to route its traffic to that VPN Endpoint.
+
+
+*This instance do not originate or terminate traffic, 
 its forwarding it between different networks.*
->[https://www.linkedin.com/pulse/why-do-we-disable-sourcedestination-checks-nat-instance-usman-ahmad/](https://www.linkedin.com/pulse/why-do-we-disable-sourcedestination-checks-nat-instance-usman-ahmad/)
+
+[https://www.linkedin.com/pulse/why-do-we-disable-sourcedestination-checks-nat-instance-usman-ahmad/](https://www.linkedin.com/pulse/why-do-we-disable-sourcedestination-checks-nat-instance-usman-ahmad/)
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025212732.png)
 
@@ -151,8 +154,8 @@ for the `vpc-on-premises` VPC.
 
 **Don't forget to attach it to the `vpc-on-premise`**
 
->[!IMPORTANT]
->**on-premise-public-subnet - Internet Access**: Before we move on, lets take a look at the
+#### IMPORTANT
+**on-premise-public-subnet - Internet Access**: Before we move on, lets take a look at the
 routing table of *on-premise-public-subnet*, we will need to add this **Internet Gateway** to it.
 This will ensure that all instances within the `on-premise-public-subnet`, 
 will have internet access.
@@ -172,18 +175,22 @@ I used the public IP address of the `on-premise-instance` I created earlier.
 This instance will serve as the on-premises site.
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025211732.png)
+
 #### Virtual Private Gateway
 
 The virtual gateway is required to establish a Site-to-Site VPN connection. 
 This virtual gateway will be used by the Site-to-Site VPN and the `vpc`.
 
-NOTE: *Look at the topology.*
+#### NOTE
+*Look at the topology.*
+
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241026124325.png)
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025212141.png)
 
 This *Virtual Private Gateway* needs to be attached to the *aws-vpc* `VPC`.
-![[Pasted image 20241025212326.png]]
+
+![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025212326.png)
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025212359.png)
 
@@ -192,8 +199,10 @@ This *Virtual Private Gateway* needs to be attached to the *aws-vpc* `VPC`.
 
 Now the VPC attached to the *Virtual Private Gateway*.
 
->[!IMPORTANT]
->Attach the `VPC` not the `vpc-on-premise`
+#### IMPORTANT
+Attach the `VPC` not the `vpc-on-premise`
+
+
 ### Site To Site VPN Connection
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025213228.png)
@@ -222,9 +231,12 @@ which is the `on-premise-public-subnet`.
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025220304.png)
 
+
 Now will need to ensure this instance accepts traffic from a specific IP CIDR block. *10.0.0.0/24*
 
+
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025220341.png)
+
 
 ##### Lets go back to route tables now.
 Before starting to configure the strongswan, lets make sure the route tables are set correctly,
@@ -234,7 +246,9 @@ It needs to route traffic to the other on-premise-public-subnet. using the virtu
 ##### Vpc-aws routing table
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025221050.png)
+
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025221208.png)
+
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025221129.png)
 
 ##### On-premise-public-subnet route table
@@ -246,6 +260,7 @@ CIDR Block 10.1.0.0/24. This connection is not peering, but since Site to Site t
 connected, it should have a path to the other VPC's subnet.
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025221632.png)
+
 ### Lets configure the on-premise-instance
 
 First, we need to login to our `on-premise-instance` to do that, we need to download our key from 
@@ -273,14 +288,14 @@ ubuntu@ip-10-0-0-87:~$ sudo apt install strongswan
 
 ##### Open `/etc/sysctl.conf`
 
->[!NOTE]
->**Editor**: I am using Vim to edit these files; you can use any editor, such as `nano`,
+#### NOTE
+**Editor**: I am using Vim to edit these files; you can use any editor, such as `nano`,
 which is also available. Please refer to the documentation for either
 [Vim](https://vimdoc.sourceforge.net/htmldoc/usr_toc.html) or 
 [Nano](https://www.nano-editor.org/docs.php).
  
->[!IMPORTANT]
->**Check Your Configuration File**: Check your configuration file downloaded from the Site To Site
+#### IMPORTANT
+**Check Your Configuration File**: Check your configuration file downloaded from the Site To Site
 VPN Connection Page. You can follow the steps provided in the file. I am going through the steps 
 used for strongswan.
 
@@ -385,6 +400,8 @@ sudo apt install net-tools
 Then execute `ifconfig`
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241026114035.png)
+
+
 You can see, all the tunnels are up.
 
 Lets check our **Site To Site VPN** and confirm that the tunnels are working.
@@ -401,22 +418,25 @@ To Site VPN we created.
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241026115424.png)
 
->[!NOTE]
->You can set the whole range of the on-premise-vpc, or just a specific IP address 
+#### NOTE
+You can set the whole range of the on-premise-vpc, or just a specific IP address 
 i.e the on-premise-instance.
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241026115538.png)
-![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241026115424.png)
- You can add one of these two.
 
->[!CAUTION]
->Don't forget to click on it *from the drop-down list* and save changes.
+![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241026115424.png)
+
+You can add one of these two.
+
+#### CAUTION
+Don't forget to click on it *from the drop-down list* and save changes.
+
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241026120309.png)
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241026115358.png)
 
->[!NOTE]
->I have tested it in both ways, from a specific range i.e 10.0.0.0/16 (vpc-on-premise),
+#### NOTE
+I have tested it in both ways, from a specific range i.e 10.0.0.0/16 (vpc-on-premise),
 >and from a specific private ip address of an instance 10.0.0.87/32 (on-premise-instance).
 
 Ping from 10.0.0.87 (on-premise-instance) to 10.1.0.179 (aws-instance)

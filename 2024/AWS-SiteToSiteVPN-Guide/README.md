@@ -41,11 +41,16 @@ And the other will be the VPC we connect to via the VPN.
 
 ## Lets Create VPCs and subnets
 #### VPC-on-premise
+
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025192658.png)
+
 Setting the IPv4 CIDR at 10.0.0.0/16
 ### Another VPC to be connected to from the VPC-on-premise
+
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025193011.png)
+
 Setting the IPv4 CIDR at 10.1.0.0/16
+
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025193246.png)
 
 #### Lets create the subnets
@@ -69,8 +74,8 @@ this will give the subnet 256 hosts.
 
 ![](https://raw.githubusercontent.com/omar0ali/posts/refs/heads/main/2024/AWS-SiteToSiteVPN-Guide/screenshots/Pasted%20image%2020241025200916.png)
 
->[!NOTE]
->Total of required subnets for this Site To Site VPN. Only two subnets, one will be used for the 
+#### NOTE
+Total of required subnets for this Site To Site VPN. Only two subnets, one will be used for the 
 on-premise machine, and the other one will be used on other side, will be used to connect to the 
 instances within the subnet using the tunnels by the Site To Site VPN.
 
